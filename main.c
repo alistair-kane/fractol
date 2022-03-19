@@ -6,10 +6,11 @@
 /*   By: alistair <alistair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 19:05:05 by alistair          #+#    #+#             */
-/*   Updated: 2022/03/16 14:06:39 by alistair         ###   ########.fr       */
+/*   Updated: 2022/03/19 17:57:52 by alistair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "fractol.h"
 
 #include <stdio.h>
@@ -23,7 +24,31 @@ int	destroy_exit(t_data *data)
 	exit(0);
 }
 
-int	handle_keypress(int keysym, t_data *data)
+int	handle_mouse(int event, t_data *data)
+{
+	int *x;
+	int *y;
+	
+	x = malloc(sizeof(*x));
+	y = malloc(sizeof(*y));
+	if (event == 4)
+	{
+		// (void)!write(1, "up\n", 3);
+		mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, x, y);
+		// printf("x: %d, y: %d", *x, *y);
+	}
+	if (event == 5)
+	{
+		// (void)!write(1, "down\n", 5);
+		mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, x, y);
+		// printf("x: %d, y: %d", *x, *y);
+	}
+	free(x);
+	free(y);
+	return (0);
+}
+
+int	handle_keystroke(int keysym, t_data *data)
 {
 	if (keysym == XK_Escape)
 		destroy_exit(data);
@@ -183,7 +208,8 @@ int	main(void)
 	data.img.mlx_img = mlx_new_image(data.mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);	
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
 	mlx_loop_hook(data.mlx_ptr, &render, &data);
-	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keypress, &data);
+	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keystroke, &data);
+	mlx_mouse_hook(data.win_ptr, &handle_mouse, &data);
 	mlx_hook(data.win_ptr, 17, 1L<<17, &destroy_exit, &data);
 	mlx_loop(data.mlx_ptr);
 	/* we will exit the loop if there's no window left, and execute this code */
