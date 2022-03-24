@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fractol.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alistair <alistair@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:04:29 by alkane            #+#    #+#             */
-/*   Updated: 2022/03/16 13:54:32 by alistair         ###   ########.fr       */
+/*   Updated: 2022/03/24 15:30:51 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,22 @@
 
 # include <stdlib.h>
 # include <math.h>
-# include <X11/X.h>
-# include <X11/keysym.h>
-# include "mlx_linux/mlx.h"
+// # include <X11/X.h>
+// # include <X11/keysym.h>
+// # include "mlx_linux/mlx.h"
+# include "mlx/mlx.h"
 
-# define WINDOW_WIDTH 800
-# define WINDOW_HEIGHT 600
+# define WINDOW_WIDTH 1280
+# define WINDOW_HEIGHT 720
 
 # define MLX_ERROR 1
-
 # define MAX_ITER 100
-
-# define RED_PIXEL 0xFF0000
-# define GREEN_PIXEL 0xFF00
-# define BLUE_PIXEL 0xFF
-# define WHITE_PIXEL 0xFFFFFF
-# define BLACK_PIXEL 0x0
 
 typedef struct s_img
 {
 	void	*mlx_img;
 	char	*addr;
-	int		bpp; /* bits per pixel */
+	int		bpp;
 	int		line_len;
 	int		endian;
 }	t_img;
@@ -47,6 +41,11 @@ typedef struct s_data
 	void	*win_ptr;
 	t_img	img;
 	int		cur_img;
+	double	x_min;
+	double	x_max;
+	double	y_min;
+	double	y_max;
+	double	zoom;
 }	t_data;
 
 typedef struct s_rgb
