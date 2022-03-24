@@ -6,10 +6,11 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 19:05:05 by alistair          #+#    #+#             */
-/*   Updated: 2022/03/24 15:52:22 by alkane           ###   ########.fr       */
+/*   Updated: 2022/03/24 19:30:13 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "fractol.h"
 
 #include <stdio.h>
@@ -218,6 +219,9 @@ int	main(void)
 	
 	mlx_key_hook(data.win_ptr, &handle_keypress, &data);
 	mlx_loop_hook(data.mlx_ptr, &render, &data);
+	// mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keystroke, &data);
+	mlx_mouse_hook(data.win_ptr, &handle_mouse, &data);
+	mlx_hook(data.win_ptr, 17, 1L<<17, &destroy_exit, &data);
 	mlx_loop(data.mlx_ptr);
 	/* we will exit the loop if there's no window left, and execute this code */
 	// mlx_destroy_display(data.mlx_ptr);
