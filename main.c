@@ -6,7 +6,7 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 19:05:05 by alistair          #+#    #+#             */
-/*   Updated: 2022/03/24 19:30:13 by alkane           ###   ########.fr       */
+/*   Updated: 2022/03/26 03:02:12 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,13 @@ int	destroy_exit(t_data *data)
 	exit(0);
 }
 
-int	handle_keypress(int code, t_data *data)
+void	init_mandelbrot(t_data *data)
 {
-	// if (code == XK_Escape)
-	// printf("key: %d", code);
-	if (code == 53)
-		destroy_exit(data);
-	// handle the other presses here?
-	return (0);
+	data->x_min = -2;
+	data->x_max = 1;
+	data->y_min = -1;
+	data->y_max = 1;
+	data->zoom = 1.0;
 }
 
 double	interp(double start, double end, double interpolation)
@@ -40,7 +39,41 @@ double	interp(double start, double end, double interpolation)
 	return (start + ((end - start) * interpolation));
 }
 
-void	zoom(t_data *data, int mouse_x, int mouse_y)
+int	handle_keypress(int code, t_data *data)
+{
+	// if (code == XK_Escape)
+	// printf("key: %d", code);
+	if (code == 53)
+		destroy_exit(data);
+	if (code == 15)
+		init_mandelbrot(data);
+	
+	printf("ratio: %f\n", data->zoom);
+	//could set "pan size" var
+	if (code == 126)
+	{	
+		data->y_min = data->y_min - (0.1 * data->zoom);
+		data->y_max = data->y_max - (0.1 * data->zoom);
+	}
+	if (code == 125)
+	{
+		data->y_min = data->y_min + (0.1 * data->zoom);
+		data->y_max = data->y_max + (0.1 * data->zoom);
+	}
+	if (code == 123)
+	{
+		data->x_min = data->x_min - (0.1 * data->zoom);
+		data->x_max = data->x_max - (0.1 * data->zoom);
+	}
+	if (code == 124)
+	{
+		data->x_min = data->x_min + (0.1 * data->zoom);
+		data->x_max = data->x_max + (0.1 * data->zoom);
+	}
+	return (0);
+}
+
+void	zoom(t_data *data, int mouse_x, int mouse_y, int zoom_direction)
 {
 	double	mouse_re;
 	double	mouse_im;
@@ -48,8 +81,18 @@ void	zoom(t_data *data, int mouse_x, int mouse_y)
 
 	mouse_re = (double)mouse_x / (WINDOW_WIDTH / (data->x_max - data->x_min)) + data->x_min;
 	mouse_im = (double)mouse_y / (WINDOW_HEIGHT / (data->y_max - data->y_min)) + data->y_min; 
-	// zoom factor is 1.01
-	interpolation = 1.0 / 1.05;
+	// zoom factor?
+	double zoom_factor = 1.03;
+	if (!zoom_direction)
+	{
+		interpolation = zoom_factor / 1.0;
+		data->zoom = zoom_factor / data->zoom;
+	}
+	else
+	{
+		interpolation = 1.0 / zoom_factor;
+		data->zoom = data->zoom / zoom_factor;
+	}
 	data->x_min = interp(mouse_re, data->x_min, interpolation);
 	data->x_max = interp(mouse_re, data->x_max, interpolation);
 	data->y_min = interp(mouse_im, data->y_min, interpolation);
@@ -61,14 +104,12 @@ int	handle_mouse(int code, int x, int y, t_data *data)
 	if (code == 5)
 	{
 		// write(1, "up\n", 3);
-		zoom(data, x, y);
-		// printf("x pos: %d, y pos: %d", x, y);
+		zoom(data, x, y, 0);
 	}
 	if (code == 4)
 	{
 		// write(1, "down\n", 5);
-		zoom(data, x, y);
-		// printf("x pos: %d, y pos: %d", x, y);
+		zoom(data, x, y, 1);
 	}
 	return (0);
 }
@@ -81,44 +122,70 @@ void	img_pix_put(t_img *img, int x, int y, int color)
 	*(int *)pixel = color;
 }
 
-int	create_trgb(int t, int r, int g, int b)
+int	create_trgb(t_rgb rgb)
 {
-	return (t << 24 | r << 16 | g << 8 | b);
+	int r;
+	int g;
+	int b;
+	
+	r = rgb.r;
+	g = rgb.g;
+	b = rgb.b;
+	// free(rgb);
+	return (0 << 24 | r << 16 | g << 8 | b);
 }
 
-void	make_t_rgb(t_rgb *rgb, int r, int g, int b)
+// void	make_t_rgb(t_rgb *rgb, int r, int g, int b)
+// {
+// 	rgb->r = r;
+// 	rgb->g = g;
+// 	rgb->b = b;
+// }
+
+t_rgb	make_t_rgb(int r, int g, int b)
 {
-	rgb->r = r;
-	rgb->g = g;
-	rgb->b = b;
+	t_rgb rgb;
+
+	rgb.r = r;
+	rgb.g = g;
+	rgb.b = b;
+	return(rgb);
 }
 
-int	hsv_to_rgb(t_hsv *hsv, t_rgb *rgb)
+int	hsv_to_rgb(t_hsv hsv)//, t_rgb rgb)
 {
-	t_vals			*vals;
+	t_rgb			rgb;
+	t_vals			vals;
 	unsigned char	region;
 	unsigned char	remainder;
 
-	vals = malloc(sizeof(t_vals));
-	region = hsv->h / 43;
-	remainder = (hsv->h - (region * 43)) * 6;
-	vals->p = (hsv->v * (255 - hsv->s)) >> 8;
-	vals->q = (hsv->v * (255 - ((hsv->s * remainder) >> 8))) >> 8;
-	vals->t = (hsv->v * (255 - ((hsv->s * (255 - remainder)) >> 8))) >> 8;
+	// rgb = malloc(sizeof(t_rgb));
+	// vals = malloc(sizeof(t_vals));
+	region = hsv.h / 43;
+	remainder = (hsv.h - (region * 43)) * 6;
+	vals.p = (hsv.v * (255 - hsv.s)) >> 8;
+	vals.q = (hsv.v * (255 - ((hsv.s * remainder) >> 8))) >> 8;
+	vals.t = (hsv.v * (255 - ((hsv.s * (255 - remainder)) >> 8))) >> 8;
 	if (region == 0)
-		make_t_rgb(rgb, hsv->v, vals->t, vals->p);
+		rgb = make_t_rgb(hsv.v, vals.t, vals.p);
+		// make_t_rgb(rgb, hsv.v, vals.t, vals.p);
 	else if (region == 1)
-		make_t_rgb(rgb, vals->q, hsv->v, vals->p);
+		rgb = make_t_rgb(vals.q, hsv.v, vals.p);
+		// make_t_rgb(rgb, vals.q, hsv.v, vals.p);
 	else if (region == 2)
-		make_t_rgb(rgb, vals->p, hsv->v, vals->t);
+		rgb = make_t_rgb(vals.p, hsv.v, vals.t);
+		// make_t_rgb(rgb, vals.p, hsv.v, vals.t);
 	else if (region == 3)
-		make_t_rgb(rgb, vals->p, vals->q, hsv->v);
+		rgb = make_t_rgb(vals.p, vals.q, hsv.v);
+		// make_t_rgb(rgb, vals.p, vals.q, hsv.v);
 	else if (region == 4)
-		make_t_rgb(rgb, vals->t, vals->p, hsv->v);
+		rgb = make_t_rgb(vals.t, vals.p, hsv.v);
+		// make_t_rgb(rgb, vals.t, vals.p, hsv.v);
 	else
-		make_t_rgb(rgb, hsv->v, vals->p, vals->q);
-	free(vals);
-	return (create_trgb(0, rgb->r, rgb->g, rgb->b));
+		rgb = make_t_rgb(hsv.v, vals.p, vals.q);
+		// make_t_rgb(rgb, hsv.v, vals.p, vals.q);
+	// free(vals);
+	return (create_trgb(rgb));
 }
 
 double	mandelbrot(double x0, double y0)
@@ -142,22 +209,12 @@ double	mandelbrot(double x0, double y0)
 	return (iteration);
 }
 
-void	init_mandelbrot(t_data *data)
-{
-	data->x_min = -2;
-	data->x_max = 1;
-	data->y_min = -1;
-	data->y_max = 1;
-	data->zoom = 1;
-}
-
 void	plot_mandelbrot(t_data *data)
 {
 	int		y;
 	int		x;
 	double	n;
-	t_hsv	*hsv;
-	t_rgb	*rgb;
+	t_hsv	hsv;
 
 	y = 0;
 	while (y < WINDOW_HEIGHT)
@@ -165,22 +222,17 @@ void	plot_mandelbrot(t_data *data)
 		x = 0;
 		while (x < WINDOW_WIDTH)
 		{
-			rgb = malloc(sizeof(t_rgb));
-			hsv = malloc(sizeof(t_hsv));
-			// scaling done by manual input of limit values currently
 			double x0 = interp(data->x_min, data->x_max, x / (float)WINDOW_WIDTH);
 			double y0 = interp(data->y_min, data->y_max, y / (float)WINDOW_HEIGHT);
 			n = mandelbrot(x0, y0);
 			// returns an amount of iterations which can then be assigned to a color
-			hsv->h = ((255 * n) / MAX_ITER);
-			hsv->s = 255;
-			hsv->v = 255;
+			hsv.h = ((255 * n) / MAX_ITER);
+			hsv.s = 255;
+			hsv.v = 255;
 			if (n >= MAX_ITER)
-				hsv->v = 0;
-			// hsv->h = hsv->h / .05;
-			img_pix_put(&(data->img), x++, y, hsv_to_rgb(hsv, rgb));
-			free(rgb);
-			free(hsv);
+				hsv.v = 0;
+			// hsv.h = hsv.h / .10;
+			img_pix_put(&(data->img), x++, y, hsv_to_rgb(hsv));
 		}
 		++y;
 	}
