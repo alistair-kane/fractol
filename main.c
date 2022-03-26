@@ -6,7 +6,7 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 19:05:05 by alistair          #+#    #+#             */
-/*   Updated: 2022/03/26 03:02:12 by alkane           ###   ########.fr       */
+/*   Updated: 2022/03/26 03:05:46 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,7 @@ int	handle_keypress(int code, t_data *data)
 		init_mandelbrot(data);
 	
 	printf("ratio: %f\n", data->zoom);
-	//could set "pan size" var
-	if (code == 126)
-	{	
-		data->y_min = data->y_min - (0.1 * data->zoom);
-		data->y_max = data->y_max - (0.1 * data->zoom);
-	}
-	if (code == 125)
-	{
-		data->y_min = data->y_min + (0.1 * data->zoom);
-		data->y_max = data->y_max + (0.1 * data->zoom);
-	}
+	//could set "pan size" var here
 	if (code == 123)
 	{
 		data->x_min = data->x_min - (0.1 * data->zoom);
@@ -69,6 +59,16 @@ int	handle_keypress(int code, t_data *data)
 	{
 		data->x_min = data->x_min + (0.1 * data->zoom);
 		data->x_max = data->x_max + (0.1 * data->zoom);
+	}
+	if (code == 125)
+	{
+		data->y_min = data->y_min + (0.1 * data->zoom);
+		data->y_max = data->y_max + (0.1 * data->zoom);
+	}
+	if (code == 126)
+	{	
+		data->y_min = data->y_min - (0.1 * data->zoom);
+		data->y_max = data->y_max - (0.1 * data->zoom);
 	}
 	return (0);
 }
