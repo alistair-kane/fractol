@@ -6,14 +6,11 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 19:05:05 by alistair          #+#    #+#             */
-/*   Updated: 2022/03/27 19:49:07 by alkane           ###   ########.fr       */
+/*   Updated: 2022/03/27 22:53:59 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
-
-const char	*g_supported[] = {"Mandelbrot", "Burning Ship", "Julia 1", \
-	"Julia 2", "Julia 3", "Julia 4"};
 
 int	destroy_exit(t_data *data)
 {
@@ -42,7 +39,7 @@ int	init(t_data *data, char *input)
 	return (0);
 }
 
-void	error_return(t_data *data)
+void	error_return(t_data *data, const char **supported)
 {
 	int	i;
 
@@ -51,14 +48,14 @@ void	error_return(t_data *data)
 	while (++i < 6)
 	{
 		ft_putstr_fd("\"", 1);
-		ft_putstr_fd(g_supported[i], 1);
+		ft_putstr_fd(supported[i], 1);
 		ft_putstr_fd("\"\n", 2);
 	}
 	free(data->mlx_ptr);
 	exit(EXIT_SUCCESS);
 }
 
-void	check_input(t_data *data, char *name)
+void	check_input(t_data *data, char *name, const char **supported)
 {
 	int	i;
 	int	no_success;
@@ -67,34 +64,33 @@ void	check_input(t_data *data, char *name)
 	no_success = 1;
 	while (++i < 6)
 	{
-		if (!ft_strncmp(name, g_supported[i], ft_strlen(g_supported[i])) \
-			&& ft_strlen(name) == ft_strlen(g_supported[i]))
+		if (!ft_strncmp(name, supported[i], ft_strlen(supported[i])) \
+			&& ft_strlen(name) == ft_strlen(supported[i]))
 		{
 			no_success = init(data, name);
 			break ;
 		}
 	}
 	if (no_success)
-		error_return(data);
+		error_return(data, supported);
 }
 
 int	main(int argc, char **argv)
 {
-	t_data	data;
+	t_data		data;
+	const char	*supported[] = {"Mandelbrot", "Burning Ship", "Julia 1", \
+		"Julia 2", "Julia 3", "Julia 4"};
 
 	data.mlx_ptr = mlx_init();
 	if (data.mlx_ptr == NULL)
 		return (MLX_ERROR);
 	if (argc == 2)
-		check_input(&data, argv[1]);
+		check_input(&data, argv[1], supported);
 	else
-		error_return(&data);
+		error_return(&data, supported);
 	data.win_ptr = mlx_new_window(data.mlx_ptr, W_WIDTH, W_HEIGHT, data.name);
 	if (data.win_ptr == NULL)
-	{
-		free(data.win_ptr);
-		return (MLX_ERROR);
-	}
+		destroy_exit(&data);
 	data.img.mlx_img = mlx_new_image(data.mlx_ptr, W_WIDTH, W_HEIGHT);
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, \
 		&data.img.line_len, &data.img.endian);
@@ -104,4 +100,4 @@ int	main(int argc, char **argv)
 	mlx_key_hook(data.win_ptr, &handle_keypress, &data);
 	mlx_loop(data.mlx_ptr);
 	mlx_destroy_window(data.mlx_ptr, data.win_ptr);
-}	
+}

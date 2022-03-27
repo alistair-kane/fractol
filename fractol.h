@@ -6,7 +6,7 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:04:29 by alkane            #+#    #+#             */
-/*   Updated: 2022/03/27 19:50:22 by alkane           ###   ########.fr       */
+/*   Updated: 2022/03/27 22:50:49 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@
 # include <stdlib.h>
 # include <math.h>
 # include <unistd.h>
-// # include <X11/X.h>
-// # include <X11/keysym.h>
-// # include "mlx_linux/mlx.h"
 # include "mlx/mlx.h"
 
 # define W_WIDTH 1280
