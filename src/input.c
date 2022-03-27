@@ -6,7 +6,7 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 19:47:10 by alkane            #+#    #+#             */
-/*   Updated: 2022/03/27 19:48:56 by alkane           ###   ########.fr       */
+/*   Updated: 2022/03/27 22:25:32 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	handle_keypress(int code, t_data *data)
 		init(data, data->name);
 	if (code == 53)
 		destroy_exit(data);
-	if (code == 96)
+	if (code == 96 && data->iterations > 0)
 		data->iterations = data->iterations - 20;
 	if (code == 97)
 		data->iterations = data->iterations + 20;

@@ -29,7 +29,6 @@ $(NAME): $(OBJS)
 # 	$(MAKE) -C $(MLX)
 
 clean:
-	rm -f $(NAME)
 	rm -f $(OBJS)
 
 fclean: clean
