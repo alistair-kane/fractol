@@ -6,7 +6,8 @@ CFLAGS	= -Wextra -Wall -Werror -O3
 # HEADERS = -I $(LIBFT) -I $(MLX) -I $(LIBMLX) -I $(FDF)
 # HEADERS = -I $(MLX)
 
-SRCS	= main.c
+SRCS	= fractals/mandelbrot.c fractals/burningship.c fractals/julia.c \
+		src/utils_1.c src/utils_2.c complex_ops.c main.c 
 OBJS	= ${SRCS:.c=.o}
 
 all: $(NAME)
