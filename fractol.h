@@ -6,7 +6,7 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:04:29 by alkane            #+#    #+#             */
-/*   Updated: 2022/03/27 19:30:14 by alkane           ###   ########.fr       */
+/*   Updated: 2022/03/27 19:50:22 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ typedef struct s_vals
 	unsigned char	t;
 }	t_vals;
 
-
 void	init_mandelbrot(t_data *data);
 // float rather than double is faster?
 double	mandelbrot(t_cplx cplx, int burn, int max_iter);
@@ -105,7 +104,11 @@ void	ft_putstr_fd(const char *s, int fd);
 char	*ft_itoa(int n);
 void	*ft_calloc(size_t nmemb, size_t size);
 char	*ft_strjoin(char const *s1, char const *s2);
+int		render(t_data *data);
+int		hsv_to_rgb(t_hsv hsv);
+int		handle_mouse(int code, int x, int y, t_data *data);
+int		handle_keypress(int code, t_data *data);
+int		destroy_exit(t_data *data);
+int		init(t_data *data, char *input);
 
 #endif
-
-
