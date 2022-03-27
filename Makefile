@@ -8,7 +8,7 @@ CFLAGS	= -Wextra -Wall -Werror -O3
 
 SRCS	= fractals/mandelbrot.c fractals/burningship.c fractals/julia.c \
 		src/utils_1.c src/utils_2.c src/plot_render.c src/colour.c src/input.c \
-		complex_ops.c main.c 
+		src/complex_ops.c main.c 
 OBJS	= ${SRCS:.c=.o}
 
 all: $(NAME)
