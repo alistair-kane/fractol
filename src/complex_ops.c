@@ -6,11 +6,11 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 14:18:57 by alkane            #+#    #+#             */
-/*   Updated: 2022/03/27 19:39:35 by alkane           ###   ########.fr       */
+/*   Updated: 2022/03/28 18:11:24 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fractol.h"
+#include "../fractol.h"
 
 t_cplx	add_comp(t_cplx e1, t_cplx e2)
 {
