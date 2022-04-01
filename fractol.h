@@ -6,7 +6,7 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:04:29 by alkane            #+#    #+#             */
-/*   Updated: 2022/03/27 22:50:49 by alkane           ###   ########.fr       */
+/*   Updated: 2022/04/01 14:52:01 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,8 @@
 
 # define MLX_ERROR 1
 # define DEFAULT_ITER 80
-
-# define MLX_SYNC_IMAGE_WRITABLE	1
-# define MLX_SYNC_WIN_FLUSH_CMD		2
-# define MLX_SYNC_WIN_CMD_COMPLETED	3
+# define DEFAULT_MIN_HSV 0
+# define DEFAULT_MAX_HSV 255
 
 typedef struct s_img
 {
@@ -52,6 +50,11 @@ typedef struct s_data
 	double	zoom;
 	double	con_real;
 	double	con_imag;
+	int		hsv_max;
+	int		hsv_min;
+	int		trip_toggle;
+	int		cycle_flag_min;
+	int		cycle_flag_max;
 }	t_data;
 
 typedef struct s_cplx
@@ -82,7 +85,6 @@ typedef struct s_vals
 }	t_vals;
 
 void	init_mandelbrot(t_data *data);
-// float rather than double is faster?
 double	mandelbrot(t_cplx cplx, int burn, int max_iter);
 void	init_julia_1(t_data *data);
 void	init_julia_2(t_data *data);
@@ -101,8 +103,11 @@ void	ft_putstr_fd(const char *s, int fd);
 char	*ft_itoa(int n);
 void	*ft_calloc(size_t nmemb, size_t size);
 char	*ft_strjoin(char const *s1, char const *s2);
+
+double	interp(double start, double end, double interpolation);
 int		render(t_data *data);
 int		hsv_to_rgb(t_hsv hsv);
+void	trip_control(t_data *data);
 int		handle_mouse(int code, int x, int y, t_data *data);
 int		handle_keypress(int code, t_data *data);
 int		destroy_exit(t_data *data);

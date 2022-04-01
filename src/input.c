@@ -6,13 +6,13 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 19:47:10 by alkane            #+#    #+#             */
-/*   Updated: 2022/03/27 22:25:32 by alkane           ###   ########.fr       */
+/*   Updated: 2022/04/01 14:38:39 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../fractol.h"
 
-static double	interp(double start, double end, double interpolation)
+double	interp(double start, double end, double interpolation)
 {
 	return (start + ((end - start) * interpolation));
 }
@@ -45,6 +45,16 @@ int	handle_keypress(int code, t_data *data)
 {
 	if (code == 15)
 		init(data, data->name);
+	if (code == 17)
+		data->trip_toggle = data->trip_toggle * -1;
+	if (code == 18 && data->hsv_min > 0)
+		data->hsv_min = data->hsv_min - 5;
+	if (code == 19 && data->hsv_min < data->hsv_max)
+		data->hsv_min = data->hsv_min + 5;
+	if (code == 20 && data->hsv_max > data->hsv_min)
+		data->hsv_max = data->hsv_max - 5;
+	if (code == 21 && data->hsv_max < 255)
+		data->hsv_max = data->hsv_max + 5;
 	if (code == 53)
 		destroy_exit(data);
 	if (code == 96 && data->iterations > 0)

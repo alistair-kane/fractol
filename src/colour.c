@@ -6,7 +6,7 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 19:44:59 by alkane            #+#    #+#             */
-/*   Updated: 2022/03/27 19:45:20 by alkane           ###   ########.fr       */
+/*   Updated: 2022/04/01 15:08:27 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,26 @@ int	hsv_to_rgb(t_hsv hsv)
 	else
 		rgb = make_t_rgb(hsv.v, vals.p, vals.q);
 	return (create_trgb(rgb));
+}
+
+void	trip_control(t_data *data)
+{
+	if (data->hsv_min < 255 && !data->cycle_flag_min)
+		data->hsv_min = data->hsv_min + 5;
+	else
+	{
+		data->cycle_flag_min = 1;
+		data->hsv_min = data->hsv_min - 5;
+		if (data->hsv_min <= 0)
+			data->cycle_flag_min = 0;
+	}
+	if (data->hsv_max < 255 && !data->cycle_flag_max)
+		data->hsv_max = data->hsv_max + 5;
+	else
+	{
+		data->cycle_flag_max = 1;
+		data->hsv_max = data->hsv_max - 5;
+		if (data->hsv_max <= 0)
+			data->cycle_flag_max = 0;
+	}
 }

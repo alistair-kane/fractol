@@ -6,7 +6,7 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 19:05:05 by alistair          #+#    #+#             */
-/*   Updated: 2022/03/27 22:53:59 by alkane           ###   ########.fr       */
+/*   Updated: 2022/04/01 14:35:43 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@ int	init(t_data *data, char *input)
 		init_julia_4(data);
 	data->iterations = DEFAULT_ITER;
 	data->zoom = 1.0;
+	data->hsv_min = DEFAULT_MIN_HSV;
+	data->hsv_max = DEFAULT_MAX_HSV;
+	data->trip_toggle = 1;
 	return (0);
 }
 
