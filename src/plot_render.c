@@ -6,7 +6,7 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 19:41:17 by alkane            #+#    #+#             */
-/*   Updated: 2022/04/01 17:53:13 by alkane           ###   ########.fr       */
+/*   Updated: 2022/04/01 18:22:13 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	plot_mandelbrot(t_data *data, int burn)
 			cplx_z.imag = (data->im_min + (y / (double)W_HEIGHT) \
 				* (data->im_max - data->im_min));
 			n = mandelbrot(cplx_z, burn, data->iterations);
-			hsv.h = interp(data->hsv_min, data->hsv_max, n) / data->iterations;
+			hsv.h = interp(data->hsv_min, data->hsv_max, n / 10);
 			hsv.s = 255;
 			hsv.v = 255;
 			if (n >= data->iterations)
@@ -68,7 +68,7 @@ static void	plot_julia(t_data *data)
 			cplx.imag = (data->im_min + (y / (double)W_HEIGHT) \
 				* (data->im_max - data->im_min));
 			n = julia(data->con_real, data->con_imag, cplx, data->iterations);
-			hsv.h = interp(data->hsv_min, data->hsv_max, n) / data->iterations;
+			hsv.h = interp(data->hsv_min, data->hsv_max, n / 10);
 			hsv.s = 255;
 			hsv.v = 255;
 			if (n >= data->iterations)
