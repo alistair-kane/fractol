@@ -6,7 +6,7 @@
 /*   By: alkane <alkane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 19:05:05 by alistair          #+#    #+#             */
-/*   Updated: 2022/04/01 14:35:43 by alkane           ###   ########.fr       */
+/*   Updated: 2022/04/01 18:11:44 by alkane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	init(t_data *data, char *input)
 	if (!ft_strncmp(data->name, "Julia 4", 7))
 		init_julia_4(data);
 	data->iterations = DEFAULT_ITER;
-	data->zoom = 1.0;
+	data->zoom = 1;
 	data->hsv_min = DEFAULT_MIN_HSV;
 	data->hsv_max = DEFAULT_MAX_HSV;
 	data->trip_toggle = 1;
@@ -47,12 +47,12 @@ void	error_return(t_data *data, const char **supported)
 	int	i;
 
 	i = -1;
-	ft_putstr_fd("Error: Available inputs:\n", 1);
+	ft_putstr_fd("\033[31m Error: Available inputs:\n", 1);
 	while (++i < 6)
 	{
-		ft_putstr_fd("\"", 1);
+		ft_putstr_fd("\033[0m\"\033[32m", 1);
 		ft_putstr_fd(supported[i], 1);
-		ft_putstr_fd("\"\n", 2);
+		ft_putstr_fd("\033[0m\"\n", 2);
 	}
 	free(data->mlx_ptr);
 	exit(EXIT_SUCCESS);
